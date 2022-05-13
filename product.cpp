@@ -119,6 +119,8 @@ class Product {
     void setAmount (int amount) {amountLeft = amount;}
     void setLocation (const Location& _loc) { loc = _loc;}
     void setComment(const MyString& _comment) { comment = _comment;}
+    void setShelf(int _shelf) {loc.setShelf(_shelf);}
+    void setSection(int _section) {loc.setSection(_section);}
 
     MyString& getName () {return name;}
     int* getExpiryDate () {return expiryDate;}
@@ -126,6 +128,8 @@ class Product {
     MyString& getManufacturer () {return manufacturer;}
     int getAmount () {return amountLeft;}
     Location& getLocation () {return loc;}
+    int getSection () {return loc.getSection();}
+    int getShelf () {return loc.getShelf();}
     MyString& getComment () {return comment;}
 
     void readProduct () {
@@ -156,6 +160,24 @@ class Product {
         cout << "Comment: ";
         comment.setSize(0);
         comment.readString();
+    }
+
+    int operator == (const Product& other) {
+        if (!strcmp(name.getString(),other.name.getString())) {
+            if (!strcmp(manufacturer.getString(),other.manufacturer.getString())) {
+                for (int i = 0; i < YYYY_MM_DD; i++) {
+                    if (expiryDate[i] != other.expiryDate[i]) {
+                        return 0; // differs in the expiry date
+                    }
+                }
+                return 1; // complete similarity
+            }
+        }
+        return -1; // has a major difference
+    }
+
+    bool sameNames (const Product& other) {
+        return !(strcmp(name.getString(),other.name.getString()));
     }
 
     void setToNULL () {
@@ -195,5 +217,16 @@ class Product {
         cout    << "Location in Storage - Section: " << loc.getSection() << "; Shelf: " << loc.getShelf()
                 << "; ID: "; loc.printID(); cout << '\n';
         cout    << "Comment: "; comment.print(); cout << '\n';
-    }  
+    }
+
+    void print (int quantity) const {
+        cout    << "Name: "; name.print(); cout << '\n';
+        cout    << "Quantity: " << quantity << '\n';
+        cout    << "Manufacturer: "; manufacturer.print(); cout << '\n';
+        cout    << "Date of entry: " << entryDate[0] << '/' << entryDate[1] << '/' << entryDate[2] << '\n';
+        cout    << "Date of expiration: " << expiryDate[0] << '/' << expiryDate[1] << '/' << expiryDate[2] << '\n';
+        cout    << "Location in Storage - Section: " << loc.getSection() << "; Shelf: " << loc.getShelf()
+                << "; ID: "; loc.printID(); cout << '\n';
+        cout    << "Comment: "; comment.print(); cout << '\n';
+    }   
 };
