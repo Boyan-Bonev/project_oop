@@ -6,6 +6,9 @@
 using std::cout;
 using std::cin;
 
+const size_t MAX_ID = 10;
+const size_t YYYY_MM_DD = 3;
+
 class Location {
     int section;
     int shelf;
@@ -60,6 +63,12 @@ class Location {
         identificator.readVector();
     }
 
+    void setIDSizeToZero () {
+        for (int i = 0; i <identificator.getSize();) {
+            identificator.pop();
+        }
+    }
+
     void readLocation () {
         cout << "Section: "; cin >> section;
         cout << "Shelf: "; cin >> shelf;
@@ -80,9 +89,6 @@ class Location {
         return section == other.getSection() && shelf == other.getShelf() && identificator == other.getID();
     }
 };
-
-const size_t MAX_ID = 10;
-const size_t YYYY_MM_DD = 3;
 
 class Product {
     MyString name;
@@ -124,22 +130,32 @@ class Product {
 
     void readProduct () {
         cout << "Product entry\n";
-        cout << "Name: "; name.readString();
-        cout << "Quantity: "; cin >> amountLeft;
-        cout << "Manufacturer: "; manufacturer.readString();
-        cout << "Date of entry/YYYY_MM_DD/: "; 
-        cout << "YYYY: "; cin >> entryDate[0];
-        cout << "MM: "; cin >> entryDate[1];
-        cout << "DD: "; cin >> entryDate[2];
-        cout << "Date of expiration/YYYY_MM_DD/:";
-        cout << "YYYY"; cin >> expiryDate[0];
-        cout << "MM: "; cin >> expiryDate[1];
-        cout << "DD: "; cin >> expiryDate[2];
-        cout << "Location in Storage/Section,Shelf,ID/:";
-        cout << "Section: "; loc.setSection();
-        cout << "Shelf: "; loc.setShelf();
-        cout << "ID: "; loc.setID();
-        cout << "Comment: "; comment.readString();
+        cout << "Name: "; 
+        for (int i = 0; i < name.getSize();) {
+            name.pop();
+        }
+        name.readString();
+        cout << "Quantity: "; cin >> amountLeft; cin.ignore();
+        cout << "Manufacturer: "; 
+        for (int i = 1; i <= manufacturer.getSize();) {
+            manufacturer.pop();
+        }
+        manufacturer.readString();
+        cout << "Date of entry/YYYY_MM_DD/:\n"; 
+        cout << "YYYY: "; cin >> entryDate[0]; cin.get();
+        cout << "MM: "; cin >> entryDate[1]; cin.get();
+        cout << "DD: "; cin >> entryDate[2]; cin.get();
+        cout << "Date of expiration/YYYY_MM_DD/:\n";
+        cout << "YYYY: "; cin >> expiryDate[0]; cin.get();
+        cout << "MM: "; cin >> expiryDate[1]; cin.get();
+        cout << "DD: "; cin >> expiryDate[2]; cin.get();
+        cout << "Location in Storage/Section,Shelf,ID/:\n";
+        cout << "Section: "; loc.setSection(); cin.get();
+        cout << "Shelf: "; loc.setShelf(); cin.get();
+        cout << "ID: "; loc.setIDSizeToZero(); loc.setID();
+        cout << "Comment: ";
+        comment.setSize(0);
+        comment.readString();
     }
 
     void setToNULL () {
@@ -177,7 +193,7 @@ class Product {
         cout    << "Date of entry: " << entryDate[0] << '/' << entryDate[1] << '/' << entryDate[2] << '\n';
         cout    << "Date of expiration: " << expiryDate[0] << '/' << expiryDate[1] << '/' << expiryDate[2] << '\n';
         cout    << "Location in Storage - Section: " << loc.getSection() << "; Shelf: " << loc.getShelf()
-                << "; ID: "; loc.printID();
+                << "; ID: "; loc.printID(); cout << '\n';
         cout    << "Comment: "; comment.print(); cout << '\n';
     }  
 };
