@@ -32,12 +32,10 @@ class Storage {
     }
 
     void addProduct (Product prod) {
-        int temp;
         bool isPlaced = false;
         for (int i = 0; i < size; i++) {
             if ((prod == store[i]) == 1) {
                 store[i].setAmount(store[i].getAmount() + prod.getAmount());
-                temp = i;
             }
             if ((prod == store[i]) == 0) {
                 store[size++] = prod;
@@ -50,7 +48,6 @@ class Storage {
                 }
             }
         }
-
     }
 
     void setStorage () {
@@ -62,8 +59,6 @@ class Storage {
             setProduct();
         }
     }
-
-    
 
     void setProduct () {
         store[size++].readProduct();
@@ -78,7 +73,7 @@ class Storage {
         cout << std::endl;
         cout.fill(' ');
         cout << '\n';
-        Vector usedIndexes;
+        Vector usedIndexes; 
         int quantity = 0;
         bool hasBeenAccounted = false;
         for (int i = 0; store[i].exists(); i++) {
@@ -108,6 +103,94 @@ class Storage {
         cout << std::endl;
         cout << "All products listed.";
         cout.fill(' ');
+    }
+
+    void removeProductByIdx (int idx) {
+        store[idx] = store[size];
+        store[size--].setToNULL();
+    }
+
+    void removeProduct (const char* _name, int amount) {
+        Vector idxsOfProduct;
+        for (int i = 0; i < size; i++) {
+            if (!strcmp(_name,store[i].getNameString())) {
+                idxsOfProduct.push_back(i);
+            }
+        }
+
+        if (idxsOfProduct.getSize() == 0) {
+            std::cerr << "No such existent product name in the storage!";
+        }
+        else {
+            sortByExpiryDate(idxsOfProduct);
+            int currIdx = 0, totalAmount = 0;
+            for (int i = 0; i < idxsOfProduct.getSize(); i++) {
+                totalAmount += store[idxsOfProduct[i]].getAmount();
+            }
+            cout << "There isn't enough " << _name << "s in the storage!\n";
+            cout << "Do You still want to remove the existent amount? Answer with Y or N";
+            char c;
+            cin.get(c);
+            cin.get();
+            if (c == 'Y') {
+                for (int i = 0; i < idxsOfProduct.getSize() && amount > 0; i++) {
+                    currIdx = idxsOfProduct[i];
+                    if (store[currIdx].getAmount() > amount) {
+                        store[currIdx].setAmount(store[currIdx].getAmount() - amount);
+                        amount = 0;
+                        cout    << amount << ' ' << _name << "s removed from section " << store[currIdx].getSection() 
+                                << ", shelf " << store[currIdx].getShelf();
+                        continue;
+                    }
+                    else if (store[currIdx].getAmount() == amount) {
+                        removeProductByIdx(currIdx);
+                        amount = 0;
+                        cout    << amount << ' ' << _name << "s removed from section " << store[currIdx].getSection() 
+                                << ", shelf " << store[currIdx].getShelf();
+                        continue;
+                    } 
+                    else {
+                        amount -= store[currIdx].getAmount();
+                        removeProductByIdx(currIdx);
+                        cout    << store[currIdx].getAmount() << ' ' << _name << "s removed from section " << store[currIdx].getSection() 
+                                << ", shelf " << store[currIdx].getShelf();
+                        continue;
+                    }
+                }
+            }
+        } 
+    }
+    
+    void checkUp (int* startDate, int* endDate) {
+        
+    }
+
+    void sortByExpiryDate (Vector array) {
+        int minExpiryIdx = -1, earliestYear = 9999, earliestMonth = 13, earliestDate = 32;
+        for (int idx = 0; idx < array.getSize(); idx++) {
+            for (int i = 0; i < array.getSize() - 1; i++) {
+                earliestYear = 9999, earliestMonth = 13, earliestDate = 32;
+                minExpiryIdx = -1;
+                if (earliestYear > store[array[i]].getExpiryYYYY()) {
+                    earliestYear = store[array[i]].getExpiryYYYY();
+                    minExpiryIdx = i;
+                }
+                else if (earliestYear == store[array[i]].getExpiryYYYY()) {
+                    if (earliestMonth > store[array[i]].getExpiryMM()) {
+                        earliestMonth = store[array[i]].getExpiryMM();
+                        minExpiryIdx = i;
+                    }
+                    else if (earliestMonth == store[array[i]].getExpiryMM()) {
+                        if (earliestDate > store[array[i]].getExpiryDD()) {
+                            earliestDate = store[array[i]].getExpiryDD();
+                            minExpiryIdx = i;
+                        }
+                    }
+                        
+                }
+            }
+                std::swap(array[idx],array[minExpiryIdx]);
+        }
     }
 
     
