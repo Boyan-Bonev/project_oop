@@ -39,6 +39,10 @@ class Location {
     int getShelf () const {return shelf;}
     const Vector& getID () const {return identificator;}
 
+    int& getNonConstSection () {return section;}
+    int& getNonConstShelf () {return shelf;}
+    Vector& getNonConstID () {return identificator;}
+
     // setters 
     void setLocation(int _section, int _shelf, const Vector& id) {
         setSection(_section);
@@ -90,6 +94,22 @@ class Location {
     }
 };
 
+std::ostream& operator << (std::ostream& os, Location& _location) {
+    return os   << _location.getSection() << '|' << _location.getShelf() 
+                << '|' << _location.getID();
+}
+
+std::istream& operator >> (std::istream& is, Location& _location) {
+    _location.setIDSizeToZero();
+    is >> _location.getNonConstSection();
+    is.ignore();
+    is >> _location.getNonConstShelf();
+    is.ignore();
+    is >> _location.getNonConstID();
+    return is;
+}
+
+
 class Product {
     MyString name;
     int amountLeft;
@@ -121,12 +141,22 @@ class Product {
     void setComment(const MyString& _comment) { comment = _comment;}
     void setShelf(int _shelf) {loc.setShelf(_shelf);}
     void setSection(int _section) {loc.setSection(_section);}
+    void resetName () { name.setSize(0);}
+    void resetManufacturer () {manufacturer.setSize(0);} 
+    void resetComment () {comment.setSize(0);}
 
     MyString& getName () {return name;}
+    char* getNameString () {return name.getString();}
     int* getExpiryDate () {return expiryDate;}
+    int& getExpiryYYYY () {return expiryDate[0];}
+    int& getExpiryMM () {return expiryDate[1];}
+    int& getExpiryDD () {return expiryDate[2];}
     int* getEntryDate () {return entryDate;}
+    int& getEntryYYYY () {return entryDate[0];}
+    int& getEntryMM () {return entryDate[1];}
+    int& getEntryDD () {return entryDate[2];}
     MyString& getManufacturer () {return manufacturer;}
-    int getAmount () {return amountLeft;}
+    int& getAmount () {return amountLeft;}
     Location& getLocation () {return loc;}
     int getSection () {return loc.getSection();}
     int getShelf () {return loc.getShelf();}
@@ -230,3 +260,36 @@ class Product {
         cout    << "Comment: "; comment.print(); cout << '\n';
     }   
 };
+
+
+std::ostream& operator << (std::ostream& os, Product& prod) {
+    return os   << prod.getName() << '|' << prod.getAmount() << '|'
+                << prod.getManufacturer() << '|' << prod.getEntryYYYY() << '.'
+                << prod.getEntryMM() << '.' << prod.getEntryDD() << '|'
+                << prod.getExpiryYYYY() << '.' << prod.getExpiryMM() << '.' 
+                << prod.getExpiryDD() << '|' << prod.getLocation() << '|'
+                << prod.getComment() << '\n';
+    }
+
+    std::istream& operator >> (std::istream& is, Product& prod) {
+        prod.resetComment(); prod.resetManufacturer(); prod.resetName();
+        is >> prod.getName();
+        is >> prod.getAmount();
+        is.ignore();
+        is >> prod.getManufacturer();
+        is >> prod.getEntryYYYY();
+        is.ignore();
+        is >> prod.getEntryMM();
+        is.ignore();
+        is >> prod.getEntryDD();
+        is.ignore();
+        is >> prod.getExpiryYYYY();
+        is.ignore();
+        is >> prod.getExpiryMM();
+        is.ignore();
+        is >> prod.getExpiryDD();
+        is.ignore();
+        is >> prod.getLocation();
+        is >> prod.getComment();
+        return is;
+    }

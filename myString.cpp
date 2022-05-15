@@ -14,6 +14,8 @@ class MyString {
     int getSize () const {return size;}
     int getCap () const {return capacity;}
 
+    void setSize (int _size) {size = _size;}
+
     // Big Four 
     // MyString()
     MyString() {
@@ -89,16 +91,14 @@ class MyString {
 
     void readString (std::istream& is = std::cin) {
         char c;
-        int length;
-        std:: cout << "Enter your string: \n";
         do {
             is.get(c);
-            std::cout << c;
+            if (c != '\n' && c!= '\0' && c!= '|') {
             push_back(c);
+            }
         }
-        while (c != '\n' || c!= '\0');
-        push_back('\0');
-        
+        while (c != '\n' && c!= '\0' && c!= '|');
+        push_back('\0');  
     }
 
     void addTo (const MyString& addition) {
@@ -124,8 +124,13 @@ class MyString {
                 std::cerr << "Failed to Allocate new memory!";
             }
         }
+        if (element != '\0') {
         m_string[size++] = element;
         m_string[size] = '\0';
+        }
+        else {
+            m_string[size] = '\0';
+        }
 
     }
 
@@ -180,4 +185,23 @@ class MyString {
         }
         return *this;
     }
+
 };
+    std::ostream& operator << (std::ostream& os, MyString const& string) {
+        return os << string.getString();
+    }
+
+    std::istream& operator >> (std::istream& is, MyString& string) {
+        char c;
+        do {
+            is.get(c);
+            if (c != '\n' && c!= '\0' && c!= '|') {
+            string.push_back(c);
+            }
+        }
+        while (c != '\n' && c!= '\0' && c!= '|');
+        string.push_back('\0'); 
+        return is;
+    }
+
+

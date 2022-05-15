@@ -63,18 +63,16 @@ class Vector {
     void readVector (std::istream& is = std::cin) {
         char c;
         do {
-            std::cout << "HEY";
-            is >> c;
+            is.get(c);
             if ( c >= '0' && c <= '9') {
-            push_back((int)c);
+            push_back((int)(c - '0'));
             }
         }
-        while ( c != '\0' && c != '\n' );
+        while ( c != '\0' && c != '\n' && c!= '|' );
     }
 
-    int getSize() {return size;}
-    int getCapacity() {return capacity;}
-    int at(int index) {return array[index];}
+    int getSize() const {return size;}
+    int getCapacity() const {return capacity;}
 
     void setVector (int _size, int* _array) {
         size = _size;
@@ -161,3 +159,32 @@ class Vector {
         return true;
     }
 };
+
+std::ostream& operator << (std::ostream& os, Vector& dynArray) {
+    int size = dynArray.getSize();
+    for (int i = 0; i < size; i++) {
+        os << dynArray[i];
+    }
+    return os;
+}
+
+std::ostream& operator << (std::ostream& os, const Vector& dynArray) {
+    int size = dynArray.getSize();
+    for (int i = 0; i < size; i++) {
+        os << dynArray[i];
+    }
+    return os;
+}
+
+std::istream& operator >> (std::istream& is, Vector& dynArray) {
+    char c;
+    do {
+        is.get(c);
+        if ( c >= '0' && c <= '9') {
+        dynArray.push_back((int)(c - '0'));
+        }
+    }
+    while ( c != '\0' && c != '\n' && c!= '|' && c!= ' ');
+    return is;
+}
+

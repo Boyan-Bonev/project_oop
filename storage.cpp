@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include "product.cpp"
 
@@ -50,6 +51,11 @@ class Storage {
             }
         }
     }
+
+    int& getSize () {return size;}
+    Product& getProductAt (int idx) {return store[idx];}
+
+    void setSize (int _size) {size = _size;}
 
     void setStorage () {
         int amount;
@@ -259,3 +265,44 @@ class Storage {
 
     
 };
+
+
+std::ostream& operator << (std::ostream& os, Storage& unit) {
+    int size = unit.getSize();
+    for (int i = 0; i < size; i++ ) {
+        os << unit.getProductAt(i);
+    }
+    return os;
+}
+
+std::istream& operator >> (std::istream& is, Storage& unit) {
+    int size;
+    is >> size;
+    is.ignore();
+    for (int i = 0; i < size; i++) {
+        is >> unit.getProductAt(i);
+        unit.setSize(unit.getSize() + 1);
+    } 
+    return is;
+}
+
+void readStorageFromFile (const char* name, Storage& unit) {
+    std::ifstream in;
+    in.open(name);
+    if (in) {
+        in >> unit;
+    }
+    in.close();
+}
+
+bool writeStorageFromFile (const char* name, Storage& unit) {
+    std::ofstream out;
+    out.open(name);
+    if (!out) {
+        return false;
+    }
+    out << unit;
+    out.close();
+    return true;
+}
+
