@@ -212,22 +212,41 @@ class Storage {
 
     void cleanUp (int* currDate) {
         int year = 0, month = 0, date = 0;
+        MyString fileName;
+        fileName.setSize(0);
+        fileName.push_back('c');
+        fileName.push_back('l');
+        fileName.push_back('e');
+        fileName.push_back('a');
+        fileName.push_back('n');
+        fileName.push_back('u');
+        fileName.push_back('p');
+        fileName.push_back('-');
+        fileName.push_back(currDate[0]);
+        fileName.push_back('-');
+        fileName.push_back(currDate[1]);
+        fileName.push_back('-');
+        fileName.push_back(currDate[2]);
+        fileName.push_back('.');
+        fileName.push_back('t');
+        fileName.push_back('x');
+        fileName.push_back('t');
         for (int i = 0; i < size; i++) {
             year = store[i].getExpiryYYYY();
             month = store[i].getExpiryMM();
             date = store[i].getExpiryDD();
             if (year < currDate[0]) {
-                // save product
+                writeProductToFile(fileName.getString(),store[i]);
                 removeProductByIdx(i);
             }
             if (year == currDate[0]) {
                 if (month < currDate[1]) {
-                    // save product
+                    writeProductToFile(fileName.getString(),store[i]);
                     removeProductByIdx(i);
                 }
                 else if (month == currDate[1]) {
                     if (date <= currDate[2] + DAYS_IN_A_WEEK) {
-                        // save product
+                        writeProductToFile(fileName.getString(),store[i]);
                         removeProductByIdx(i);
                     }
                 }
@@ -295,7 +314,7 @@ void readStorageFromFile (const char* name, Storage& unit) {
     in.close();
 }
 
-bool writeStorageFromFile (const char* name, Storage& unit) {
+bool writeStorageToFile (const char* name, Storage& unit) {
     std::ofstream out;
     out.open(name);
     if (!out) {
