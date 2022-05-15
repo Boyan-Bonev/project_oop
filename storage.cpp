@@ -8,6 +8,7 @@ using std::endl;
 
 const size_t MAX_PRODUCTS = 64;
 const size_t MAX_WIDTH = 128;
+const size_t DAYS_IN_A_WEEK = 7;
 
 class Storage {
     Product store [MAX_PRODUCTS];
@@ -162,7 +163,70 @@ class Storage {
     }
     
     void checkUp (int* startDate, int* endDate) {
-        
+        int year = 0, month = 0, date = 0;
+        bool afterStartDate = false, beforeEndDate = false;
+        for (int i = 0; i < size; i++) {
+            year = store[i].getEntryYYYY();
+            month = store[i].getEntryMM();
+            date = store[i].getEntryDD();
+            afterStartDate = false;
+            beforeEndDate = false;
+
+            if (year > startDate[0]) {
+                afterStartDate = true;
+            }
+            else if (year == startDate[0]) {
+                if (month > startDate[1]) {
+                    afterStartDate = true;
+                }
+                else if (month == startDate[1]) {
+                    if (date >= startDate[2]) {
+                        afterStartDate = true;
+                    }
+                }
+            }
+
+            if (year < endDate[0]) {
+                beforeEndDate = true;
+            }
+            else if (year == endDate[0]) {
+                if (month > endDate[1]) {
+                    beforeEndDate = true;
+                }
+                else if (month == endDate[1]) {
+                    if (date >= endDate[2]) {
+                        beforeEndDate = true;
+                    }
+                }
+            }
+            cout    << "Product " << store[i].getNameString() << " entered in " 
+                    << year << '/' << month << '/' << date << ".\n";
+        }
+    }
+
+    void cleanUp (int* currDate) {
+        int year = 0, month = 0, date = 0;
+        for (int i = 0; i < size; i++) {
+            year = store[i].getExpiryYYYY();
+            month = store[i].getExpiryMM();
+            date = store[i].getExpiryDD();
+            if (year < currDate[0]) {
+                // save product
+                removeProductByIdx(i);
+            }
+            if (year == currDate[0]) {
+                if (month < currDate[1]) {
+                    // save product
+                    removeProductByIdx(i);
+                }
+                else if (month == currDate[1]) {
+                    if (date <= currDate[2] + DAYS_IN_A_WEEK) {
+                        // save product
+                        removeProductByIdx(i);
+                    }
+                }
+            }
+        }
     }
 
     void sortByExpiryDate (Vector array) {
