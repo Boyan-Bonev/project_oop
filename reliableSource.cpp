@@ -8,18 +8,19 @@ int main () {
     MyString tempName;
     int tempAmnt;
     int startDate[3], endDate[3], currDate[3];
+    Product prod;
 
     cout << "Въведете името на складовия файл: ";
     unitName.readString();
     readStorageFromFile(unitName.getString(), unit);
 
-    cout << "Въведете продукта си за въвеждане";
-    Product prod; prod.readProduct();
+    cout << "Въведете продукта си за въвеждане\n";
+    prod.readProduct();
     unit.addProduct(prod);
 
-    cout << "Въведете името на продукт за изваждане: "; tempName.readString();
-    cout << "Въведете бройката за изваждане: "; cin >> tempAmnt; cin.get();
-    unit.removeProduct(tempName.getString(),tempAmnt);
+    cout << "Въведете продукта си за въвеждане\n";
+    prod.readProduct();
+    unit.addProduct(prod);
 
     cout << "Въведете името на продукт за изваждане: "; tempName.readString();
     cout << "Въведете бройката за изваждане: "; cin >> tempAmnt; cin.get();
@@ -43,6 +44,7 @@ int main () {
     unit.cleanUp(currDate);
 
     unit.print();
+    writeStorageToFile("output.txt",unit);
     return 0;
 
     /*
