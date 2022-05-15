@@ -293,3 +293,14 @@ std::ostream& operator << (std::ostream& os, Product& prod) {
         is >> prod.getComment();
         return is;
     }
+
+bool writeProductToFile (const char* name, Product& unit) {
+    std::ofstream out;
+    out.open(name);
+    if (!out) {
+        return false;
+    }
+    out << unit;
+    out.close();
+    return true;
+}
