@@ -21,6 +21,10 @@ int main () {
     cout << "Въведете бройката за изваждане: "; cin >> tempAmnt; cin.get();
     unit.removeProduct(tempName.getString(),tempAmnt);
 
+    cout << "Въведете името на продукт за изваждане: "; tempName.readString();
+    cout << "Въведете бройката за изваждане: "; cin >> tempAmnt; cin.get();
+    unit.removeProduct(tempName.getString(),tempAmnt);
+
     cout << "Въведете периода, подлежащ на справка: \n";
     cout << "Начална дата /YYYY_MM_DD/:\n"; 
     cout << "YYYY: "; cin >> startDate[0]; cin.get();
